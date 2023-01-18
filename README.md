@@ -1,6 +1,6 @@
 # spaceShotGame
 
-spaceShotGame è un gioco creato da me dove lo scopo è quello di schivare gli asteroido accumulando sempre più punti.
+spaceShotGame è un gioco creato da me dove lo scopo è quello di schivare gli asteroidi accumulando sempre più punti.
 
 ### Regole:
 
