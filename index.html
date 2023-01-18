@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+</head>
+
+<script>
+    window.onload = function () {
+        colorBG = "#000000";
+
+        myCanvas = document.getElementById("mycanvas");
+        myContext = myCanvas.getContext("2d");
+        myContext.fillStyle = colorBG;
+
+        myContext.fillRect(0, 0, myCanvas.width, myCanvas.height);
+
+        myImageAstronave = new Image();
+        myImageAstronave.src = "images/astronave.png";
+        xAstronave = 450;
+        yAstronave = 600;
+
+        minYOfMetiorite = [];
+        maxYOfMetiorite = [];
+
+        numbersOfAsteroidi = 1;
+        xAsteroideArray = [];
+        yAsteroideArray = [];
+        myImageAsteroide = new Image();
+        myImageAsteroide.src = "images/asteroide.png";
+        xAsteroideArray[0] = Math.floor(Math.random() * (1000 - myImageAsteroide.width) + 1 );
+        yAsteroideArray[0] = -500;
+
+        pointsOfGame = 0;
+        life = 5;
+        muoviAstronave = false;
+
+        key = 0;
+
+        yMissiles = 0;
+        xMissiles = 0;
+        missilesExists = false;
+        missiles = new Image();
+        missiles.src = "images/missile.png";
+        numberOfMissiles = missiles.length;
+
+        asteroideSpeed = 3;
+
+
+        myImageAstronave.onload = function() {
+            myContext.drawImage(myImageAstronave, xAstronave, yAstronave);
+        }
+
+        timerOfGame = setInterval(function() {
+            myContext.fillStyle = colorBG;
+            myContext.fillRect(0, 0, myCanvas.width, myCanvas.height);
+            myContext.drawImage(myImageAstronave, xAstronave, yAstronave);
+
+            if (missilesExists) {
+                yMissiles -= 3;
+                myContext.drawImage(missiles, xMissiles, yMissiles);
+
+                if (yMissiles < -missiles.height) {
+                    missilesExists = false;
+                }
+            }
+
+
+            myContext.font = "bold 40px verdana, sans-serif";
+            var message1 = "Punti: " + pointsOfGame;
+            var message2 = "Vite: " + life;
+            myContext.textAlign = "start";
+            myContext.textBaseline = "top";
+            myContext.fillStyle = "white";
+            myContext.fillText(message1, 5, 5);
+            myContext.fillText(message2, 5, 45);
+
+
+            for (i = 0; i < numbersOfAsteroidi; i++) {
+                yAsteroideArray[i] = parseFloat(yAsteroideArray[i]) + (0.1 * pointsOfGame) + asteroideSpeed;
+                myContext.drawImage(myImageAsteroide, xAsteroideArray[i], yAsteroideArray[i]);
+
+
+                if (aus = upTheAsteroide(yAsteroideArray[i])) {
+                    maxYOfMetiorite[numbersOfAsteroidi - 1] = yAsteroideArray[numbersOfAsteroidi - 1];
+                    xAsteroideArray[i] = aus;
+                    yAsteroideArray[i] = -500;
+                    pointsOfGame++;
+                    minYOfMetiorite[numbersOfAsteroidi - 1] = yAsteroideArray[numbersOfAsteroidi - 1];
+                } else if (collisionWithObjects(yAsteroideArray[i], xAsteroideArray[i], yAstronave, xAstronave, myImageAstronave.height, myImageAstronave.width, myImageAsteroide.height, myImageAsteroide.height)) {
+                    maxYOfMetiorite[numbersOfAsteroidi - 1] = yAsteroideArray[numbersOfAsteroidi - 1];
+                    life--;
+                    yAsteroideArray[i] = - myImageAsteroide.height * 2;
+                    xAsteroideArray[i] = Math.floor(Math.random() * (1000 - myImageAsteroide.width) + 1 );
+                    minYOfMetiorite[numbersOfAsteroidi - 1] = yAsteroideArray[numbersOfAsteroidi - 1];
+                } else if (!life) {
+                    myContext.fillStyle = "#000000";
+                    myContext.fillRect(0, 0, myCanvas.width, myCanvas.height);
+                    myContext.drawImage(myImageAstronave, xAstronave, yAstronave);
+
+                    myContext.font = "bold 40px verdana, sans-serif";
+                    var message1 = "Punti: " + pointsOfGame;
+                    var message2 = "Vite: 0";
+                    myContext.textAlign = "start";
+                    myContext.textBaseline = "top";
+                    myContext.fillStyle = "white";
+                    myContext.fillText(message1, 5, 5);
+                    myContext.fillText(message2, 5, 45);
+
+                    clearInterval(timerOfGame);
+
+                    if(window.confirm("GAME OVER! Vuoi ricominciare?")) {
+                        location.reload();
+                    } else {
+                        close();
+                    }
+                }
+
+
+                if(collisionWithObjects(yMissiles, xMissiles, yAsteroideArray[i], xAsteroideArray[i], missiles.height, missiles.width, myImageAsteroide.height, myImageAsteroide.width) && missilesExists) {
+                    yAsteroideArray[i] = - myImageAsteroide.height * 2;
+                    xAsteroideArray[i] = Math.floor(Math.random() * (1000 - myImageAsteroide.width) + 1 );
+                    pointsOfGame += 2;
+
+                    var message1 = "Punti: " + pointsOfGame;
+                    var message2 = "Vite: " + life;
+                    myContext.fillText(message1, 5, 5);
+                    myContext.fillText(message2, 5, 45);
+
+                    missilesExists = false;
+                }
+            }
+
+            if (pointsOfGame >= 10 - 1 && numbersOfAsteroidi == 1) {
+                if (yAsteroideArray[numbersOfAsteroidi - 1] >= (maxYOfMetiorite[numbersOfAsteroidi - 1] + minYOfMetiorite[numbersOfAsteroidi - 1] / 2) && numbersOfAsteroidi == 1) {
+                    numbersOfAsteroidi++;
+                    yAsteroideArray[numbersOfAsteroidi - 1] = - 500;
+                    xAsteroideArray[numbersOfAsteroidi - 1] = Math.floor(Math.random() * (1000 - myImageAsteroide.width) + 1 );
+                }
+            }
+
+            if (muoviAstronave) {
+                if (key == 65 && xAstronave > 0) {
+                    xAstronave = xAstronave - 4;
+                }
+
+                if (key == 68 && xAstronave < 1000 - myImageAstronave.width) {
+                    xAstronave = xAstronave + 4;
+                }
+
+                if (key == 32 && !missilesExists) {
+                    yMissiles = yAstronave;
+                    xMissiles = xAstronave;
+                    myContext.drawImage(missiles, xAstronave, yAstronave);
+                    missilesExists = true;
+                }
+            }
+            
+            
+        }, 5);
+
+        document.onkeydown = function(e) {
+            //spazio 32
+            //sinistra 65
+            //space 32
+            //destra 68
+
+            key = e.keyCode;
+
+            muoviAstronave = true;
+        }
+
+        document.onkeyup = function(e) {
+            muoviAstronave = false;
+        }
+    }
+</script>
+
+<body>
+    <canvas id="mycanvas" width="1000" height="700">
+
+    </canvas>
+</body>
+<script>
+    function refreshPage() {
+        location.reload();
+    }
+
+    function closePage() {
+        close();
+    }
+
+    function upTheAsteroide(x) {
+        if (x > myCanvas.height) {
+            x = - myImageAsteroide.height * 2;
+            x = Math.floor(Math.random() * (1000 - myImageAsteroide.width) + 1 );
+            return x;
+        }
+
+        return false;
+    }
+
+    function collisionWithObjects(yFirstObject, xFirstObject, ySecondObject, xSecondObject, firstObjectHeight, firstObjectWitdth, secondObjectHeight, secondObjectWitdth) {
+        if(secondObjectWitdth > firstObjectWitdth) {
+            distanzaOggettiX = firstObjectWitdth;
+        } else {
+            distanzaOggettiX = firstObjectWitdth;
+        }
+
+        if(secondObjectHeight > firstObjectHeight) {
+            distanzaOggettiY = secondObjectHeight;
+        } else {
+            distanzaOggettiY = firstObjectHeight;
+        }
+
+        if (Math.abs(yFirstObject - ySecondObject) <= distanzaOggettiY  && Math.abs(xFirstObject - xSecondObject) <= distanzaOggettiX) {
+            return true;
+        }
+
+        return false;
+    }
+</script>
+</html>
