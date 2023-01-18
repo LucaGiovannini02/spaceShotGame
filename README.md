@@ -25,4 +25,3 @@ Il game over arriva quando perdiamo tutte le vite. Si perde una vita ogni volta 
 ### Tecnologie con cui è stato sviluppato:
 
 <img src="https://cdn-icons-png.flaticon.com/512/732/732212.png" width="50"> &emsp; <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" width="50">
-"# spaceShotGame" 
