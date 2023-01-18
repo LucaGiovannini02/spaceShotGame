@@ -24,4 +24,4 @@ Il game over arriva quando perdiamo tutte le vite. Si perde una vita ogni volta 
 
 ### Tecnologie con cui è stato sviluppato:
 
-<img src="https://cdn-icons-png.flaticon.com/512/732/732212.png" width="50"> &emsp; <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" width="50">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Visual_Studio_Code_1.35_icon.svg/2048px-Visual_Studio_Code_1.35_icon.svg.png" width="50" /> <img src="https://cdn-icons-png.flaticon.com/512/732/732212.png" width="50"> &emsp; <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" width="50">
